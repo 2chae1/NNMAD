@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyTimer</title>
+</head>
+<body>
+    <!--timer display-->
+    <h1 id="timer_output">00:00:00</h1>
+    <button onclick="addSeconds()">+30min</button>
+    <button onclick="init()">Init</button>
+    <button onclick="start()">Start</button>
+    <button onclick="pause()">Pause</button>
+    <h6 id="message" style="color:red;"></h6>
+
+    <script>
+
+        let running = false;
+        let seconds = 0;
+        let timerDisplay;
+        
+        // event handler
+        function addSeconds() {
+            seconds = seconds+1800; //One click increase 30 minutes
+
+            let hours = Math.floor(seconds/3600);
+            let mins = Math.floor((seconds%3600)/60);
+            let secs = seconds % 3600 % 60;
+            if(hours < 10) hours = "0" + hours;
+            if(mins < 10) mins = "0" + mins;
+            if(secs < 10) secs = "0" + secs;
+
+            document.getElementById("timer_output").innerHTML = hours+":"+mins+":"+secs;
+            document.getElementById("message").innerHTML =""; 
+        }
+
+        function init() {
+            pause();
+            seconds = 0;
+            document.getElementById("timer_output").innerHTML = "00:00:00";     
+        }
+
+        function start() {
+            if(seconds==0) document.getElementById("message").innerHTML ="Time is zero... Please click +30min...";
+            else {
+                running = true;
+                run();
+            }
+        }
+
+        function pause() {
+            running = false;
+            //clearTimeout(timerDisplay);
+        }
+
+        // run timer
+        function run() {
+            if(running) {
+                timerDisplay = setTimeout(function () {
+                    seconds--;
+
+                    let hours = Math.floor(seconds/3600);
+                    let mins = Math.floor((seconds%3600)/60);
+                    let secs = seconds % 3600 % 60;
+                    if(hours < 10) hours = "0" + hours;
+                    if(mins < 10) mins = "0" + mins;
+                    if(secs < 10) secs = "0" + secs;
+
+                    document.getElementById("timer_output").innerHTML = hours+":"+mins+":"+secs;
+
+                    if(seconds==0) pause();
+                    else run();
+                },1000)
+            } 
+        }
+
+    </script>
+</body>
+</html>
