@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        .keypad {
+            margin: 5px;
+        }
+        button {
+            width:50px;
+            height:50px;
+        }
+    </style>
+</head>
+<body>
+    <!--keypad Display-->
+    <div class="keypad">
+        <div>
+            <button type="button" class="keypad_num">0</button>
+            <button type="button" class="keypad_num">1</button>
+            <button type="button" class="keypad_num">2</button>
+            <button type="button" class="keypad_num">3</button>
+        </div>
+        <div>
+            <button type="button" class="keypad_num">4</button>
+            <button type="button" class="keypad_num">5</button>
+            <button type="button" class="keypad_num">6</button>
+            <button type="button" class="keypad_num">7</button>
+        </div>
+        <div>
+            <button type="button" class="keypad_num">8</button>
+            <button type="button" class="keypad_num">9</button>
+            <button type="button" onclick=answer()>=</button>
+            <button type="button" onclick=erase()>init</button>
+        </div>
+        <div>
+            <button type="button" class="keypad_oper">+</button>
+            <button type="button" class="keypad_oper">-</button>
+            <button type="button" class="keypad_oper">%</button>
+            <button type="button" class="keypad_oper">X</button>
+        </div>
+    </div>
+    <!--calculate Display-->
+    <div>
+        <h3 id="expression"></h3>
+        <br><h3 id="answer"></h3>
+    </div>
+
+    <script>
+        let result=-1;
+        let num=-1;
+        let before_oper=-1;
+
+        //add event
+        let keypad_num = document.querySelectorAll(".keypad_num");
+        keypad_num.forEach((elem) => {
+            elem.addEventListener('click',pressNum);
+        });
+
+        let keypad_oper = document.querySelectorAll(".keypad_oper");
+        keypad_oper.forEach((elem) => {
+            elem.addEventListener('click',pressOper);
+        });
+
+
+        //event Handler
+       function pressNum(event) {
+            let target = event.target.innerText;
+            addExpression(target);
+
+            if(num==-1) num = Number(target);
+            else num = num*10 + Number(target);
+        }
+
+        function pressOper(event) {
+            let target = event.target.innerText;
+            addExpression(" "+target+" ");
+
+            if(target=="+") calculate(1);
+            if(target=="-") calculate(2);
+            if(target=="%") calculate(3);
+            if(target=="*") calculate(4);
+        }
+
+        function answer() {
+            calculate(-1);
+            document.getElementById("answer").innerHTML = "= "+result;
+
+            result = -1;
+            num = -1;
+        }
+
+        function erase() {
+            document.getElementById("expression").innerHTML = "";
+            document.getElementById("answer").innerHTML = "";
+        }
+
+        // function
+        function calculate(now_oper) {
+            if(before_oper==-1) result = num;
+            else if(before_oper==1) result = result + num;
+            else if(before_oper==2) result = result - num;
+            else if(before_oper==3) result = result / num;
+            else if(before_oper==4) result = result * num;
+            else ;
+            console.log(before_oper,now_oper,num,result);
+            before_oper = now_oper;
+            num=0;
+        }
+
+         
+        function addExpression(str) {
+            document.getElementById("expression").innerHTML += str;
+        }
+
+    </script>
+</body>
+</html>
