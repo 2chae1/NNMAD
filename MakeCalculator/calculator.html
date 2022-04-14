@@ -9,52 +9,60 @@
         .keypad {
             margin: 5px;
         }
+        .keypad_line {
+            margin: 5px;
+        }
         button {
             width:50px;
-            height:50px;
+            height: 50px;
+            background-color:pink;
         }
     </style>
 </head>
 <body>
+    <!--calculate Display-->
+    <div>
+        <h1 id="expression"></h1>
+    </div>
+
     <!--keypad Display-->
     <div class="keypad">
-        <div>
+        <div class="keypad_line">
             <button type="button" class="keypad_num">0</button>
             <button type="button" class="keypad_num">1</button>
             <button type="button" class="keypad_num">2</button>
-            <button type="button" class="keypad_num">3</button>
+            <button type="button" class="keypad_oper">+</button>
         </div>
-        <div>
+        <div class="keypad_line">
+            <button type="button" class="keypad_num">3</button>
             <button type="button" class="keypad_num">4</button>
             <button type="button" class="keypad_num">5</button>
+            <button type="button" class="keypad_oper">-</button>
+        </div>
+        <div class="keypad_line">
             <button type="button" class="keypad_num">6</button>
             <button type="button" class="keypad_num">7</button>
-        </div>
-        <div>
             <button type="button" class="keypad_num">8</button>
-            <button type="button" class="keypad_num">9</button>
-            <button type="button" onclick=answer()>=</button>
-            <button type="button" onclick=erase()>init</button>
-        </div>
-        <div>
-            <button type="button" class="keypad_oper">+</button>
-            <button type="button" class="keypad_oper">-</button>
             <button type="button" class="keypad_oper">%</button>
+        </div>
+        <div class="keypad_line">
+            <button type="button" class="keypad_num">9</button>
+            <button type="button" class="keypad_oper">=</button>
+            <button type="button" onclick=erase()>init</button>
             <button type="button" class="keypad_oper">X</button>
         </div>
     </div>
-    <!--calculate Display-->
-    <div>
-        <h3 id="expression"></h3>
-        <br><h3 id="answer"></h3>
-    </div>
 
     <script>
-        let result=-1;
-        let num=-1;
-        let before_oper=-1;
+        let nums=[];
+        let opers=[];
+        
+        let result=null;
+        let num=null;
+        let before_oper=null; // for divide, multiply
 
-        //add event
+
+        // 클래스에 이벤트 추가
         let keypad_num = document.querySelectorAll(".keypad_num");
         keypad_num.forEach((elem) => {
             elem.addEventListener('click',pressNum);
@@ -66,52 +74,78 @@
         });
 
 
-        //event Handler
+        // 숫자 버튼 누르면
        function pressNum(event) {
             let target = event.target.innerText;
             addExpression(target);
 
-            if(num==-1) num = Number(target);
+            if(num==null) num = Number(target);
             else num = num*10 + Number(target);
         }
 
+        // 연산자 버튼 누르면
         function pressOper(event) {
             let target = event.target.innerText;
             addExpression(" "+target+" ");
 
-            if(target=="+") calculate(1);
-            if(target=="-") calculate(2);
-            if(target=="%") calculate(3);
-            if(target=="*") calculate(4);
+            saveNumOper(target);
+
+            console.log(nums);
+            console.log(opers);
+            console.log(before_oper);
         }
 
-        function answer() {
-            calculate(-1);
-            document.getElementById("answer").innerHTML = "= "+result;
-
-            result = -1;
-            num = -1;
-        }
-
+        // init 버튼 누르면
         function erase() {
+            nums=[];
+            opers=[];
+            result = null;
+            num = null;
+            before_oper = null;
             document.getElementById("expression").innerHTML = "";
-            document.getElementById("answer").innerHTML = "";
         }
 
-        // function
-        function calculate(now_oper) {
-            if(before_oper==-1) result = num;
-            else if(before_oper==1) result = result + num;
-            else if(before_oper==2) result = result - num;
-            else if(before_oper==3) result = result / num;
-            else if(before_oper==4) result = result * num;
-            else ;
-            console.log(before_oper,now_oper,num,result);
-            before_oper = now_oper;
-            num=0;
+        // 숫자 저장, +/- 저장
+        function saveNumOper(oper) {
+            if(before_oper!=null) handleBeforeOper();
+            else nums.push(num);
+
+            if(oper=="+") opers.push(1);
+            if(oper=="-") opers.push(2);
+            if(oper=="%") before_oper=3;
+            if(oper=="X") before_oper=4;
+            if(oper=="=") answer();
+
+            num=null;
         }
 
-         
+        // x/% 바로 계산
+        function handleBeforeOper() {
+            let temp_num = calculate(nums[nums.length-1],num,before_oper);
+            nums.pop();
+            nums.push(temp_num);
+            before_oper=null;
+        }
+
+        // = 바로계산
+        function answer() {
+            result = nums[0];
+            for(let i=0; i<opers.length; i++) {
+                result = calculate(result,nums[i+1],opers[i]);
+            }
+
+            addExpression(result);
+        }
+
+        // 계산
+        function calculate(num1,num2,oper) {
+            if(oper==1) return num1+num2;
+            if(oper==2) return num1-num2;
+            if(oper==3) return num1/num2;
+            if(oper==4) return num1*num2;
+        }
+
+        // 수식출력
         function addExpression(str) {
             document.getElementById("expression").innerHTML += str;
         }
