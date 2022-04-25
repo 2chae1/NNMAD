@@ -6,37 +6,49 @@
     <link rel="stylesheet" href="ChromeApp.css">
 </head>
 <body>
-    <!--clock-->
-    <h2 id="clock">00:00:00</h2>
-
-    <!--login-->
-    <form class="login hidden">
-        <input type="text" placeholder="Your Name?"/>
-        <button>login</button> 
-    </form>
-
-    <!--greeting-->
-    <h1 class="greeting hidden"></h1>
-
-    <!--quotes-->
-    <div id="quote">
-        <span></span>
-        <span></span>
+    <div class="whole">
+        <!--header-->
+        <div class="header">
+            <!--login-->
+            <form class="login hidden">
+                <input type="text" placeholder="Your Name?"/>
+                <button>✔️</button> 
+            </form>
+            <!--greeting-->
+            <h1 class="greeting hidden"></h1>
+        </div>
+        <!--main-->
+        <div class="main">
+            <!--left-->
+            <div class="left">
+                <!--weather-->
+                <div id="weather">
+                    <span></span>
+                    <span></span>
+                </div>
+                <!--clock-->
+                <div id="clock">
+                    <h2>00:00:00</h2>
+                </div>
+                <!--quote-->
+                <div id="quote">
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <!--right-->
+            <div class="right">
+                <!--todo-->
+                <div id="todobox">
+                    <form id="todo">
+                        <input type="text" placeholder="Your To-Do List?">
+                        <button>✏️</button>
+                    </form>
+                    <ul id="todolist"></ul>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!--todo-->
-    <form id="todo">
-        <input type="text" placeholder="Your To-Do List?">
-        <button>add</button>
-    </form>
-    <ul id="todolist"></ul>
-
-    <!--weather-->
-    <div id="weather">
-        <span></span>
-        <span></span>
-    </div>
-
     <script src="greeting.js"></script>
     <script src="clock.js"></script>
     <script src="quotes.js"></script>

@@ -50,5 +50,5 @@ function deleteLocalStorage() {
 }
 
 
-deleteLocalStorage();
+//deleteLocalStorage();
 init();

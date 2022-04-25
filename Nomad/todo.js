@@ -24,7 +24,7 @@ function paintTodo(obj) {
 
     li.id = obj.id;
     content.innerText = obj.text;
-    deleteButton.innerText = "X";
+    deleteButton.innerText = "❌";
     deleteButton.addEventListener("click",deleteTodo);
 
     li.appendChild(content);
